@@ -1,19 +1,31 @@
 // Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+var Enemy = function(startX, startY, speed) {
+    // Variables applied to each of our instances go here, we've provided one for you to get started
+    this.x = startX;
+    this.y = startY;
+    this.speed = speed;
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    // The image/sprite for our enemies, this uses a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // You should multiply any movement by the dt parameter which will ensure the game runs at the same speed for all computers.
+    this.x = this.x + (this.speed * dt);
+    // If the enemy is off-screen (to the right),
+    if (this.x > 500) {
+        // Put it back off-screen (to the left)
+        this.x = -90;
+        // And give it a new, random speed
+        this.randomizeSpeed();
+    }
+}
+
+Enemy.prototype.randomizeSpeed = function() {
+    var randomMultiplier = Math.floor(Math.random() * 5 + 1);
+    this.speed = randomMultiplier * 60;
 }
 
 // Draw the enemy on the screen, required method for game
@@ -23,9 +35,21 @@ Enemy.prototype.render = function() {
 
 /* ====================== Player class below ============================ */
 
+var canvasTopLimit = 0;
+var canvasBottomLimit = 400;
+var canvasLeftLimit = 0;
+var canvasRightLimit = 400;
+
+// Where to start the player
+var playerInitialX = 200;
+var playerInitialY = 400;
+
+// How much to increment by when moving on the x and y axis
+var playerMovementX = 101;
+var playerMovementY = 85;
+
 // Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// This class requires an update(), render() and a handleInput() method.
 var Player = function(x, y) {
     // This char could be one of many. Might be interesting to randomize the character on game reset/init
     this.x = x;
@@ -33,28 +57,42 @@ var Player = function(x, y) {
     this.sprite = 'images/char-boy.png';
 }
 
-Player.prototype.update = function(dt) {}
+Player.prototype.update = function(dt) {
+    // Unsure of what would need to go here? 
+}
+
 Player.prototype.render = function(x, y) {
     // Start the player in the middle column, bottom row
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
-Player.prototype.handleInput = function(keyCode) {
-    if (keyCode === 'left' && this.x > 0) {
-        // player.render(-100, 0);
-        this.x -= 100;
+
+    // If the player has reached the water row, reset them to their initial position
+    if (this.y < 15) {
+        this.resetPosition();
     }
-    if (keyCode === 'right' && this.x < 400) {
-        this.x += 100;
-    }
-    if (keyCode === 'up' && this.y > 0) {
-        this.y -= 85;
-    }
-    if (keyCode === 'down' && this.y < 400) {
-        this.y += 85;
-    }
-    console.log(this.x, this.y);
 }
 
+Player.prototype.resetPosition = function() {
+    this.x = playerInitialX;
+    this.y = playerInitialY;
+}
+
+Player.prototype.handleInput = function(keyCode) {
+    // If the input is the left arrow, and the player is not off-canvas
+    if (keyCode === 'left' && this.x > canvasLeftLimit) {
+        // Move the player one movement to the left
+        this.x -= playerMovementX;
+    }
+    if (keyCode === 'right' && this.x < canvasRightLimit) {
+        this.x += playerMovementX;
+    }
+    if (keyCode === 'up' && this.y > canvasTopLimit) {
+        this.y -= playerMovementY;
+    }
+    if (keyCode === 'down' && this.y < canvasBottomLimit) {
+        this.y += playerMovementY;
+    }
+    // console.log(this.x, this.y);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -62,11 +100,21 @@ Player.prototype.handleInput = function(keyCode) {
 var player,
     allEnemies;
 
-player = new Player(200, 400);
+player = new Player(playerInitialX, playerInitialY);
 allEnemies = [];
 
-for (var i = 0; i < 6; i++) {
-    var newEnemy = new Enemy();
+//  Create all the enemies. In this case, we're creating 3
+for (var i = 0; i < 3; i++) {
+    // Randomize a speed to use as an argument when creating an enemy
+    var initialSpeed = Math.floor(Math.random() * 5 + 1) * 60;
+
+    // Create an enemy, arguments are x, y, and speed
+    // 'x' is negative to place the enemy off-canvas (to the left)
+    // 'y' in this case is calculated by multiplying the tile height (85) by the index of the iterated element.
+    // This gives evenly spaced enemies. Then we add 57 to try and optically center the enemies in their respective rows 
+    var newEnemy = new Enemy(-120, 57 + (85 * i), initialSpeed);
+    
+    // Push the enemy into the array
     allEnemies.push(newEnemy);
 }
 
@@ -79,6 +127,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
