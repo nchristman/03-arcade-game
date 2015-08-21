@@ -1,6 +1,6 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+How to play:
+Use your arrow keys to control the player. Try to get to the water! If a bug runs you over, you start back at your original position. 
 
-for self-checking their submission.
