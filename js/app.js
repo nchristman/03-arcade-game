@@ -1,29 +1,3 @@
-var checkCollisions = function(player, enemy) {
-    var enemyPosition = {
-        left: enemy.x,
-        right: enemy.x + 100,
-        top: enemy.y + 77,
-        bottom: enemy.y + 154
-    }
-    var playerPosition = {
-        left: player.x,
-        right: player.x + 100,
-        top: player.y + 64,
-        bottom: player.y + 152
-    }
-
-    // Create an offset to deal with the transparent top of the sprite causing collisions
-    var offset = 50;
-
-    // Reset the player if the collision is detected
-    if (enemyPosition.left < playerPosition.right &&
-        enemyPosition.right > playerPosition.left &&
-        enemyPosition.top < playerPosition.bottom &&
-        enemyPosition.bottom > playerPosition.top + offset) {
-        player.resetPosition();
-    }
-}
-
 // Enemies our player must avoid
 var Enemy = function(startX, startY, speed) {
     // Variables applied to each of our instances go here, we've provided one for you to get started
@@ -61,7 +35,7 @@ Enemy.prototype.render = function() {
 
 /* ====================== Player class below ============================ */
 
-var canvasTopLimit = 0;
+var canvasTopLimit = 50;
 var canvasBottomLimit = 400;
 var canvasLeftLimit = 0;
 var canvasRightLimit = 400;
@@ -72,7 +46,7 @@ var playerInitialY = 400;
 
 // How much to increment by when moving on the x and y axis
 var playerMovementX = 101;
-var playerMovementY = 85;
+var playerMovementY = 82;
 
 // Now write your own player class
 // This class requires an update(), render() and a handleInput() method.
@@ -87,7 +61,7 @@ Player.prototype.update = function(dt) {
     // Unsure of what would need to go here? It said it was needed?
     // Check if the player is occupying the same space as any of the enemies
     for (var i = 0; i < allEnemies.length; i++) {
-        checkCollisions(this, allEnemies[i]);
+        this.checkCollisions(this, allEnemies[i]);
     }
 }
 
@@ -98,6 +72,32 @@ Player.prototype.render = function(x, y) {
     // If the player has reached the water row, reset them to their initial position
     if (this.y < 15) {
         this.resetPosition();
+    }
+}
+
+Player.prototype.checkCollisions = function(player, enemy) {
+    var enemyPosition = {
+        left: enemy.x,
+        right: enemy.x + 100,
+        top: enemy.y + 90,
+        bottom: enemy.y + 154
+    }
+    var playerPosition = {
+        left: player.x,
+        right: player.x + 100,
+        top: player.y + 64,
+        bottom: player.y + 152
+    }
+
+    // Create an offset to deal with the transparent top of the sprite causing collisions
+    var offset = 50;
+
+    // Reset the player if the collision is detected
+    if (enemyPosition.left < playerPosition.right &&
+        enemyPosition.right > playerPosition.left &&
+        enemyPosition.top < playerPosition.bottom &&
+        enemyPosition.bottom > playerPosition.top + offset) {
+        player.resetPosition();
     }
 }
 
