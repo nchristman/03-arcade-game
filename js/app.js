@@ -142,7 +142,7 @@ for (var i = 0; i < 3; i++) {
     // 'y' in this case is calculated by multiplying the tile height (85) by the index of the iterated element.
     // This gives evenly spaced enemies. Then we add 57 to try and optically center the enemies in their respective rows 
     var newEnemy = new Enemy(-120, 57 + (85 * i), initialSpeed);
-    
+
     // Push the enemy into the array
     allEnemies.push(newEnemy);
 }
