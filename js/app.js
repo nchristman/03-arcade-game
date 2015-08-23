@@ -7,7 +7,7 @@ var Enemy = function(startX, startY, speed) {
 
     // The image/sprite for our enemies, this uses a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -21,17 +21,17 @@ Enemy.prototype.update = function(dt) {
         // And give it a new, random speed
         this.randomizeSpeed();
     }
-}
+};
 
 Enemy.prototype.randomizeSpeed = function() {
     var randomMultiplier = Math.floor(Math.random() * 5 + 1);
     this.speed = randomMultiplier * 60;
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 /* ====================== Player class below ============================ */
 
@@ -55,7 +55,7 @@ var Player = function(x, y) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/char-boy.png';
-}
+};
 
 Player.prototype.update = function(dt) {
     // Unsure of what would need to go here? It said it was needed?
@@ -63,7 +63,7 @@ Player.prototype.update = function(dt) {
     for (var i = 0; i < allEnemies.length; i++) {
         this.checkCollisions(this, allEnemies[i]);
     }
-}
+};
 
 Player.prototype.render = function(x, y) {
     // Start the player in the middle column, bottom row
@@ -73,7 +73,7 @@ Player.prototype.render = function(x, y) {
     if (this.y < 15) {
         this.resetPosition();
     }
-}
+};
 
 Player.prototype.checkCollisions = function(player, enemy) {
     var enemyPosition = {
@@ -99,12 +99,12 @@ Player.prototype.checkCollisions = function(player, enemy) {
         enemyPosition.bottom > playerPosition.top + offset) {
         player.resetPosition();
     }
-}
+};
 
 Player.prototype.resetPosition = function() {
     this.x = playerInitialX;
     this.y = playerInitialY;
-}
+};
 
 Player.prototype.handleInput = function(keyCode) {
     // If the input is the left arrow, and the player is not off-canvas
@@ -121,7 +121,7 @@ Player.prototype.handleInput = function(keyCode) {
     if (keyCode === 'down' && this.y < canvasBottomLimit) {
         this.y += playerMovementY;
     }
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
