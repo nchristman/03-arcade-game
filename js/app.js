@@ -81,13 +81,13 @@ Player.prototype.checkCollisions = function(player, enemy) {
         right: enemy.x + 100,
         top: enemy.y + 90,
         bottom: enemy.y + 154
-    }
+    };
     var playerPosition = {
         left: player.x,
         right: player.x + 100,
         top: player.y + 64,
         bottom: player.y + 152
-    }
+    };
 
     // Create an offset to deal with the transparent top of the sprite causing collisions
     var offset = 50;
